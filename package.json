@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
-    "start": "npm run start --prefix backend"
+    "postinstall": "cd backend && npm install",
+    "build": "cd frontend && npm install && npm run build",
+    "start": "node backend/src/server.js"
   },
   "repository": {
     "type": "git",
@@ -14,9 +15,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/varad-2003/talent-iq/issues"
   },
-  "homepage": "https://github.com/varad-2003/talent-iq#readme"
+  "homepage": "https://github.com/varad-2003/talent-iq#readme",
+  "dependencies": {
+    "build": "^0.1.4"
+  }
 }
