@@ -2,11 +2,22 @@ import express from "express";
 import path from "path";
 import { ENV } from "./lib/env.js";
 import { connectDB } from "./lib/db.js";
+import { serve } from "inngest/express";
+import { inngestClient, functions } from "./lib/inngest.js";
+import cors from "cors";
+import { fileURLToPath } from 'url';
 
 const app = express();
 const port = ENV.PORT;
 
-const __dirname = path.resolve();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.json());
+//credentials: true  :- it mean s server allowed the browser to include to cookies
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+
+app.use("/api/inngest", serve({ client: inngestClient, functions }));
 
 app.get("/books", (req, res) => {
   res.status(200).json({ msg: "hello from talent-iq" });
@@ -17,13 +28,12 @@ app.get("/health", (req, res) => {
 
 // make our app ready for deployment
 
-if (ENV.NODE_ENV === "development") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
-  app.get("/{*any}", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-  });
-}
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
+
+app.get("/{*any}", (req, res) => {
+  res.sendFile(path.join(__dirname, "../../frontend", "dist", "index.html"));
+});
 
 const startServer = async () => {
   try {
