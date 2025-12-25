@@ -6,6 +6,8 @@ import { serve } from "inngest/express";
 import { inngestClient, functions } from "./lib/inngest.js";
 import cors from "cors";
 import { fileURLToPath } from 'url';
+import 'dotenv/config';
+
 
 const app = express();
 const port = ENV.PORT;
