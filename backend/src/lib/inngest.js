@@ -29,6 +29,9 @@ const syncUser = inngestClient.createFunction(
             image: newUser.profileImage
         })
     }
+
+    // challenge-1:- Send the welcome email to the user here later
+
 )
 
 const deleteUserFromDB = inngestClient.createFunction(
