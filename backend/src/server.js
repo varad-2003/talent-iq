@@ -7,7 +7,9 @@ import { inngestClient, functions } from "./lib/inngest.js";
 import cors from "cors";
 import { fileURLToPath } from 'url';
 import 'dotenv/config';
-
+import {clerkMiddleware} from "@clerk/express"
+import { protectRoute } from "./middlewares/protectRoute.js";
+import chatRoutes  from "./routes/chatRoutes.js"
 
 const app = express();
 const port = ENV.PORT;
@@ -18,18 +20,17 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 //credentials: true  :- it mean s server allowed the browser to include to cookies
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(clerkMiddleware())
 
 app.use("/api/inngest", serve({ client: inngestClient, functions }));
+app.use("/api/chats", chatRoutes)
 
-app.get("/books", (req, res) => {
-  res.status(200).json({ msg: "hello from talent-iq" });
-});
 app.get("/health", (req, res) => {
+
   res.status(200).json({ msg: "talent-iq is up and running" });
 });
 
 // make our app ready for deployment
-
 
 app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
