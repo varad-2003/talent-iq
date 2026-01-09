@@ -3,6 +3,7 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./App.css";
 import {
+  ClerkLoaded,
   SignedIn,
   SignedOut,
   SignInButton,
@@ -15,13 +16,16 @@ import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ProblemsPage from "./pages/ProblemsPage";
 import { Toaster } from "react-hot-toast";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
-  const { isSignedIn } = useUser();
+  const { isSignedIn, isLoaded } = useUser();
+  if(!isLoaded) return null
   return (
     <>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={!isSignedIn ? <HomePage /> : <Navigate to={"/dashboard"} />} />
+        <Route path="/dashboard" element={isSignedIn ? <Dashboard /> : <Navigate to={"/"} />} />
         <Route path="/about" element={<AboutPage />} />
         <Route
           path="/problem-page"
